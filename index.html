@@ -6,6 +6,14 @@
     <link rel="stylesheet" href="style/style.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet"> <!-- Bootstrap CSS -->
     <title>Spoti'stat</title>
+
+<style>
+  /* Masque la barre de recherche par défaut de DataTables */
+  div.dataTables_filter {
+    display: none !important;
+  }
+</style>
+
   </head>
   <body>
 <header class="bg-primary text-white text-center py-4">
@@ -41,10 +49,17 @@
 
 <div class="container my-5">
   <div class="card">
-    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-      <h5 class="card-title mb-0">Liste des Morceaux</h5>
-      <input type="text" id="searchInput" class="form-control form-control-sm" placeholder="Rechercher..." style="max-width: 200px;">
-    </div>
+
+    
+    <div class="card-header bg-primary text-white">
+  <div class="d-flex justify-content-between align-items-center">
+    <h5 class="card-title mb-0">Liste des Morceaux</h5>
+    <input type="text" id="searchInput" class="form-control form-control-sm ms-3" placeholder="Rechercher..." style="max-width: 200px;">
+  </div>
+</div>
+
+
+
     <div class="card-body">
       <div class="table-responsive">
         <table id="morceauxTable" class="table table-striped table-hover align-middle">
