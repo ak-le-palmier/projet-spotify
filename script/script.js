@@ -7,6 +7,7 @@ fetch('./data/data.json')
     renderTopArtists(data);
     renderGenres(data);
     renderTrackList(data);
+    renderAlbums(data); 
   })
   .catch(error => console.error("Erreur chargement JSON :", error));
 
@@ -197,4 +198,58 @@ function showTrackModal(track) {
 
   const modal = new bootstrap.Modal(document.getElementById('trackModal'));
   modal.show();
+}
+
+
+function renderAlbums(data) {
+  const container = document.getElementById("albumsContainer");
+  container.innerHTML = "";
+
+  const albumMap = new Map();
+
+  data.forEach(track => {
+    const album = track.album;
+    if (!album) return;
+
+    const albumId = album.id;
+    if (!albumMap.has(albumId)) {
+      albumMap.set(albumId, {
+        name: album.name || "Album inconnu",
+        image: album.images?.[0]?.url || "",
+        release_date: album.release_date || "",
+        artists: album.artists?.map(a => a.name).join(", ") || "Artiste inconnu",
+        genres: (album.artists?.flatMap(a => a.genres || [])) || [],
+        popularity: album.popularity || 0,
+        totalTracks: album.total_tracks || 1,
+        spotifyLink: album.external_urls?.spotify || "#"
+      });
+    }
+  });
+
+  albumMap.forEach(album => {
+    const col = document.createElement("div");
+    col.className = "col-12 col-sm-6 col-md-4 col-lg-3 mb-4";
+
+    col.innerHTML = `
+      <div class="card h-100 shadow-sm">
+        <img src="${album.image}" class="card-img-top" alt="cover album">
+        <div class="card-body d-flex flex-column">
+          <h6 class="card-title">${album.name}</h6>
+          <p class="mb-1 text-muted">${album.artists}</p>
+          <p class="mb-1 text-muted small">${album.release_date}</p>
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="badge bg-success">🔥 ${album.popularity}/100</span>
+            <span class="badge bg-primary">${album.totalTracks} titre${album.totalTracks > 1 ? 's' : ''}</span>
+          </div>
+          <div class="d-flex flex-wrap gap-1 mt-auto">
+            ${album.genres.slice(0, 2).map(g => `<span class="badge bg-secondary">${g}</span>`).join("")}
+          </div>
+        </div>
+        <div class="card-footer bg-transparent border-top-0">
+          <a href="${album.spotifyLink}" target="_blank" class="btn btn-sm btn-outline-success w-100">Écouter sur Spotify</a>
+        </div>
+      </div>
+    `;
+    container.appendChild(col);
+  });
 }
